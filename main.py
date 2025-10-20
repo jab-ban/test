@@ -11,12 +11,21 @@ from dotenv import load_dotenv
 # ---------- Load environment variables ----------
 load_dotenv()
 
-class EvolutionAPI:
-    BASE_URL = os.getenv("EVO_BASE_URL")
-    INSTANCE_NAME = os.getenv("EVO_INSTANCE_NAME")
+# ---------- Secure Secrets Loader ----------
+def get_secret(key: str):
+    """Reads key from st.secrets if available, otherwise from environment."""
+    if key in st.secrets:
+        return st.secrets[key]
+    return os.getenv(key)
 
+
+# ---------- Evolution API Class ----------
+class EvolutionAPI:
     def __init__(self):
-        self.__api_key = os.getenv("AUTHENTICATION_API_KEY")
+        self.BASE_URL = get_secret("EVO_BASE_URL")
+        self.INSTANCE_NAME = get_secret("EVO_INSTANCE_NAME")
+        self.__api_key = get_secret("AUTHENTICATION_API_KEY")
+
         self.__headers = {
             'apikey': self.__api_key,
             'Content-Type': 'application/json'
@@ -43,7 +52,6 @@ st.set_page_config(page_title="💬 Communication Hub", page_icon="💎", layout
 # ---------- Ultra Modern CSS ----------
 st.markdown("""
     <style>
-        /* General Background */
         body {
             background: linear-gradient(135deg, #f0f4ff 0%, #eaf1fb 50%, #dee9ff 100%);
             font-family: 'Poppins', sans-serif;
@@ -53,8 +61,6 @@ st.markdown("""
             margin: auto;
             padding-top: 2rem !important;
         }
-
-        /* Glassmorphic Card */
         .main-card {
             background: rgba(255, 255, 255, 0.85);
             backdrop-filter: blur(15px);
@@ -67,8 +73,6 @@ st.markdown("""
         .main-card:hover {
             transform: scale(1.01);
         }
-
-        /* Headings */
         h1 {
             color: #1e3a8a;
             font-weight: 800;
@@ -87,8 +91,6 @@ st.markdown("""
             background: linear-gradient(to right, transparent, #94a3b8, transparent);
             margin: 2rem 0;
         }
-
-        /* Buttons */
         .stButton > button {
             background: linear-gradient(90deg, #2563eb, #3b82f6, #2563eb);
             color: white !important;
@@ -105,8 +107,6 @@ st.markdown("""
             transform: translateY(-2px);
             box-shadow: 0 10px 25px rgba(37, 99, 235, 0.4);
         }
-
-        /* Inputs */
         .stTextInput>div>div>input, textarea {
             border-radius: 12px !important;
             border: 1px solid #cbd5e1 !important;
@@ -114,43 +114,15 @@ st.markdown("""
             padding: 0.6rem !important;
             font-size: 0.95rem !important;
         }
-        textarea {
-            height: 120px !important;
-        }
-
-        /* Select boxes */
+        textarea { height: 120px !important; }
         .stSelectbox div[data-baseweb="select"] > div {
             border-radius: 12px !important;
             border: 1px solid #cbd5e1 !important;
             background-color: #f8fafc !important;
         }
-
-        /* Alerts */
-        .stAlert {
-            border-radius: 15px !important;
-            padding: 1rem 1.2rem !important;
-            box-shadow: 0 6px 16px rgba(0,0,0,0.05);
-            font-weight: 500;
-        }
-
-        /* Footer */
-        .footer {
-            text-align: center;
-            margin-top: 2.5rem;
-            color: #6b7280;
-            font-size: 0.9rem;
-        }
-        .footer a {
-            color: #2563eb;
-            text-decoration: none;
-            font-weight: 600;
-        }
-
-        /* Animation for header emoji */
-        .pulse {
-            display: inline-block;
-            animation: pulse 1.8s infinite;
-        }
+        .footer { text-align: center; margin-top: 2.5rem; color: #6b7280; font-size: 0.9rem; }
+        .footer a { color: #2563eb; text-decoration: none; font-weight: 600; }
+        .pulse { display: inline-block; animation: pulse 1.8s infinite; }
         @keyframes pulse {
             0% { transform: scale(1); opacity: 1; }
             50% { transform: scale(1.2); opacity: 0.7; }
@@ -161,7 +133,6 @@ st.markdown("""
 
 # ---------- Layout ----------
 st.markdown('<div class="main-card">', unsafe_allow_html=True)
-
 st.markdown('<h1><span class="pulse">💬</span> Communication Hub</h1>', unsafe_allow_html=True)
 st.markdown("<h3>Send your messages professionally via Email or WhatsApp 🚀</h3>", unsafe_allow_html=True)
 st.markdown("<hr>", unsafe_allow_html=True)
@@ -252,8 +223,5 @@ if st.button(f"Send {method} Messages Now"):
         time.sleep(delay)
 
     st.success(f"🎉 Done! {sent_count}/{total} messages sent successfully.", icon="✅")
-
-# ---------- Footer ----------
-
 
 st.markdown("</div>", unsafe_allow_html=True)
