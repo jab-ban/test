@@ -7,6 +7,7 @@ from itertools import cycle
 import requests
 import os
 from dotenv import load_dotenv
+import io
 
 # ---------- Load environment variables ----------
 load_dotenv()
@@ -137,13 +138,13 @@ st.markdown('<h1><span class="pulse">💬</span> Communication Hub</h1>', unsafe
 st.markdown("<h3>Send your messages professionally via Email or WhatsApp 🚀</h3>", unsafe_allow_html=True)
 st.markdown("<hr>", unsafe_allow_html=True)
 
-# ---------- CSV Load ----------
+# ---------- CSV Load from Streamlit Secrets ----------
 try:
-    receivers_df = pd.read_csv('C:/Users/Ban/OneDrive/Desktop/communication sys/emails.csv')
-    senders_df = pd.read_csv('C:/Users/Ban/OneDrive/Desktop/communication sys/senders-emails.csv')
+    receivers_df = pd.read_csv(io.StringIO(st.secrets["MAILS_CSV"]))
+    senders_df = pd.read_csv(io.StringIO(st.secrets["SENDERS_CSV"]))
     st.success(f"✅ Receivers loaded: **{len(receivers_df)}** | Senders loaded: **{len(senders_df)}**")
 except Exception as e:
-    st.error(f"❌ Error loading CSV files: {e}")
+    st.error(f"❌ Error loading CSV data from secrets: {e}")
     st.stop()
 
 # ---------- Method ----------
@@ -170,13 +171,13 @@ if "dept" in receivers_df.columns:
         filtered_df = receivers_df[receivers_df["dept"].isin(selected_depts)]
         st.info(f"📋 {len(filtered_df)} receiver(s) found in selected department(s).")
 else:
-    st.error("❌ 'dept' column not found in receivers file!")
+    st.error("❌ 'dept' column not found in receivers data!")
     filtered_df = receivers_df
 
 # ---------- WhatsApp Numbers ----------
 if method == "WhatsApp":
     if "number" not in filtered_df.columns:
-        st.error("❌ 'number' column not found in receivers file!")
+        st.error("❌ 'number' column not found in receivers data!")
         st.stop()
     whatsapp_numbers = filtered_df["number"].tolist()
 
