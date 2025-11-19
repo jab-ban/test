@@ -14,11 +14,9 @@ load_dotenv()
 
 # ---------- Secure Secrets Loader ----------
 def get_secret(key: str):
-    """Reads key from st.secrets if available, otherwise from environment."""
     if key in st.secrets:
         return st.secrets[key]
     return os.getenv(key)
-
 
 # ---------- Evolution API Class ----------
 class EvolutionAPI:
@@ -47,146 +45,129 @@ class EvolutionAPI:
         return res_json
 
 
-# ---------- Streamlit Config ----------
+# ---------- Streamlit Page Config ----------
 st.set_page_config(page_title="💬 Communication Hub", page_icon="💎", layout="centered")
 
-# ---------- Ultra Modern CSS ----------
+# ---------- GLASS ULTRA-PREMIUM PROFESSIONAL CSS ----------
 st.markdown("""
-    <style>
-        body {
-            background: linear-gradient(135deg, #f0f4ff 0%, #eaf1fb 50%, #dee9ff 100%);
-            font-family: 'Poppins', sans-serif;
-        }
-        .block-container {
-            max-width: 900px !important;
-            margin: auto;
-            padding-top: 2rem !important;
-        }
-        .main-card {
-            background: rgba(255, 255, 255, 0.85);
-            backdrop-filter: blur(15px);
-            padding: 3rem;
-            border-radius: 30px;
-            box-shadow: 0 10px 40px rgba(0,0,0,0.08);
-            border: 1px solid rgba(255,255,255,0.4);
-            transition: transform 0.3s ease;
-        }
-        .main-card:hover {
-            transform: scale(1.01);
-        }
-        h1 {
-            color: #1e3a8a;
-            font-weight: 800;
-            font-size: 2.6rem;
-            text-align: center;
-            letter-spacing: -1px;
-        }
-        h3, h2, h4 {
-            color: #475569;
-            text-align: center;
-            font-weight: 400;
-        }
-        hr {
-            border: none;
-            height: 1px;
-            background: linear-gradient(to right, transparent, #94a3b8, transparent);
-            margin: 2rem 0;
-        }
-        .stButton > button {
-            background: linear-gradient(90deg, #2563eb, #3b82f6, #2563eb);
-            color: white !important;
-            border-radius: 14px;
-            font-weight: 600;
-            padding: 0.9rem 2rem;
-            border: none;
-            font-size: 1.05rem;
-            box-shadow: 0 8px 20px rgba(37, 99, 235, 0.3);
-            transition: all 0.3s ease;
-        }
-        .stButton > button:hover {
-            background: linear-gradient(90deg, #1d4ed8, #2563eb, #1d4ed8);
-            transform: translateY(-2px);
-            box-shadow: 0 10px 25px rgba(37, 99, 235, 0.4);
-        }
-        .stTextInput>div>div>input, textarea {
-            border-radius: 12px !important;
-            border: 1px solid #cbd5e1 !important;
-            background-color: #f8fafc !important;
-            padding: 0.6rem !important;
-            font-size: 0.95rem !important;
-        }
-        textarea { height: 120px !important; }
-        .stSelectbox div[data-baseweb="select"] > div {
-            border-radius: 12px !important;
-            border: 1px solid #cbd5e1 !important;
-            background-color: #f8fafc !important;
-        }
-        .footer { text-align: center; margin-top: 2.5rem; color: #6b7280; font-size: 0.9rem; }
-        .footer a { color: #2563eb; text-decoration: none; font-weight: 600; }
-        .pulse { display: inline-block; animation: pulse 1.8s infinite; }
-        @keyframes pulse {
-            0% { transform: scale(1); opacity: 1; }
-            50% { transform: scale(1.2); opacity: 0.7; }
-            100% { transform: scale(1); opacity: 1; }
-        }
-    </style>
+<style>
+    body {
+        background: linear-gradient(135deg, #eef2ff 0%, #dbe4ff 50%, #e0e7ff 100%);
+        font-family: 'Poppins', sans-serif;
+    }
+    .block-container {
+        max-width: 900px !important;
+        margin: auto;
+        padding-top: 2rem !important;
+    }
+    .main-card {
+        background: rgba(255,255,255,0.25);
+        padding: 3rem;
+        border-radius: 25px;
+        backdrop-filter: blur(20px);
+        border: 1px solid rgba(255,255,255,0.45);
+        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.08);
+        animation: fadeIn .9s ease;
+    }
+    @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(15px); }
+        to   { opacity: 1; transform: translateY(0); }
+    }
+    h1 {
+        text-align: center;
+        font-weight: 800;
+        color: #1e3a8a;
+        letter-spacing: -1px;
+    }
+    h3 {
+        text-align:center;
+        color:#475569;
+        font-weight: 400;
+    }
+    .stButton > button {
+        background: linear-gradient(90deg, #2563eb, #3b82f6);
+        color: white !important;
+        border-radius: 14px;
+        padding: .9rem 2rem;
+        font-size: 1.1rem;
+        font-weight: 600;
+        border: none;
+        box-shadow: 0 8px 22px rgba(37, 99, 235, 0.35);
+        transition: .3s ease;
+        width: 100%;
+    }
+    .stButton > button:hover {
+        background: linear-gradient(90deg, #1e40af, #2563eb);
+        transform: translateY(-3px);
+        box-shadow: 0 12px 28px rgba(37, 99, 235, 0.45);
+    }
+    .stTextInput>div>div>input, textarea {
+        border-radius: 12px !important;
+        border: 1px solid #cbd5e1 !important;
+        background-color: #f8fafc !important;
+        padding: .7rem !important;
+    }
+    .stSelectbox div[data-baseweb="select"] > div {
+        border-radius: 12px !important;
+        background-color: #f1f5f9 !important;
+        border: 1px solid #cbd5e1 !important;
+    }
+    hr {
+        border: none;
+        height: 1px;
+        background: linear-gradient(to right, transparent, #94a3b8, transparent);
+        margin: 2rem 0;
+    }
+</style>
 """, unsafe_allow_html=True)
 
 # ---------- Layout ----------
 st.markdown('<div class="main-card">', unsafe_allow_html=True)
-st.markdown('<h1><span class="pulse">💬</span> Communication Hub</h1>', unsafe_allow_html=True)
+st.markdown("<h1>💬 Communication Hub</h1>", unsafe_allow_html=True)
 st.markdown("<h3>Send your messages professionally via Email or WhatsApp 🚀</h3>", unsafe_allow_html=True)
 st.markdown("<hr>", unsafe_allow_html=True)
 
-# ---------- CSV Load from Streamlit Secrets ----------
+
+# ---------- Load CSV Files ----------
 try:
     receivers_df = pd.read_csv(io.StringIO(st.secrets["MAILS_CSV"]))
     senders_df = pd.read_csv(io.StringIO(st.secrets["SENDERS_CSV"]))
-    st.success(f"✅ Receivers loaded: **{len(receivers_df)}** | Senders loaded: **{len(senders_df)}**")
+    st.success(f"✔ Loaded: {len(receivers_df)} receivers | {len(senders_df)} senders")
 except Exception as e:
-    st.error(f"❌ Error loading CSV data from secrets: {e}")
+    st.error(f"Error loading CSV: {e}")
     st.stop()
 
-# ---------- Method ----------
-method = st.selectbox("📤 Choose Sending Method", ["Email", "WhatsApp"])
+# ---------- User Selections ----------
+method = st.selectbox("Send Method", ["Email", "WhatsApp"])
 delay = 2
 
-# ---------- Message Input ----------
 if method == "Email":
-    subject = st.text_input("📌 Email Subject", "Test Email")
-    body_template = st.text_area("💌 Email Body", "Hello {name},\nThis is a test email from my project!")
+    subject = st.text_input("Email Subject", "Test Email")
+    body_template = st.text_area("Email Body", "Hello {name},\nThis is a test email.")
 else:
     subject = None
-    body_template = st.text_area("💬 WhatsApp Message", "Hi {name}, this is a test WhatsApp message!")
+    body_template = st.text_area("WhatsApp Message", "Hi {name}, this is a WhatsApp test message!")
 
-# ---------- Filter by Department ----------
+# ---------- Department Filter ----------
 if "dept" in receivers_df.columns:
     departments = sorted(receivers_df["dept"].dropna().unique().tolist())
-    selected_depts = st.multiselect("🏢 Choose Department(s)", options=departments, default=departments)
-
-    if not selected_depts:
-        st.warning("⚠️ No department selected, sending to all.")
-        filtered_df = receivers_df
-    else:
-        filtered_df = receivers_df[receivers_df["dept"].isin(selected_depts)]
-        st.info(f"📋 {len(filtered_df)} receiver(s) found in selected department(s).")
+    selected = st.multiselect("Choose Department(s)", options=departments, default=departments)
+    filtered_df = receivers_df if not selected else receivers_df[receivers_df["dept"].isin(selected)]
 else:
-    st.error("❌ 'dept' column not found in receivers data!")
+    st.error("❌ 'dept' column missing!")
     filtered_df = receivers_df
 
-# ---------- WhatsApp Numbers ----------
-if method == "WhatsApp":
-    if "number" not in filtered_df.columns:
-        st.error("❌ 'number' column not found in receivers data!")
-        st.stop()
-    whatsapp_numbers = filtered_df["number"].tolist()
+# ---------- WhatsApp Check ----------
+if method == "WhatsApp" and "number" not in filtered_df.columns:
+    st.error("❌ Missing 'number' column!")
+    st.stop()
 
-# ---------- Send Button ----------
+# ---------- Send Section ----------
 st.markdown("<hr>", unsafe_allow_html=True)
 st.subheader("🚀 Ready to Send")
 
-if st.button(f"Send {method} Messages Now"):
-    st.success("✨ Sending started instantly!", icon="⚡")
+if st.button(f"Send {method} Messages"):
+    st.success("Sending started... ⚡")
 
     total = len(filtered_df)
     sent_count = 0
@@ -196,11 +177,12 @@ if st.button(f"Send {method} Messages Now"):
     for _, row in filtered_df.iterrows():
         name = row["name"]
         message = body_template.format(name=name)
+
         try:
             if method == "Email":
-                sender_data = next(senders_cycle)
-                sender_email = sender_data["email"]
-                app_password = sender_data["app_password"]
+                sender = next(senders_cycle)
+                sender_email = sender["email"]
+                password = sender["app_password"]
                 receiver = row["email"]
 
                 msg = MIMEText(message)
@@ -210,19 +192,20 @@ if st.button(f"Send {method} Messages Now"):
 
                 server = smtplib.SMTP("smtp.gmail.com", 587)
                 server.starttls()
-                server.login(sender_email, app_password)
+                server.login(sender_email, password)
                 server.send_message(msg)
                 server.quit()
+
             else:
-                number = str(row["number"]).strip()
-                api.send_message(number, message)
+                api.send_message(str(row["number"]), message)
 
             sent_count += 1
+
         except Exception as e:
-            st.error(f"❌ Failed for {name}: {e}")
+            st.error(f"❌ Error sending to {name}: {e}")
 
         time.sleep(delay)
 
-    st.success(f"🎉 Done! {sent_count}/{total} messages sent successfully.", icon="✅")
+    st.success(f"🎉 Done! Successfully sent {sent_count}/{total} messages.")
 
 st.markdown("</div>", unsafe_allow_html=True)
