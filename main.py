@@ -9,16 +9,14 @@ import os
 from dotenv import load_dotenv
 import io
 
-# ---------- Load environment variables ----------
 load_dotenv()
 
-# ---------- Secure Secrets Loader ----------
 def get_secret(key: str):
     if key in st.secrets:
         return st.secrets[key]
     return os.getenv(key)
 
-# ---------- Evolution API Class ----------
+
 class EvolutionAPI:
     def __init__(self):
         self.BASE_URL = get_secret("EVO_BASE_URL")
@@ -38,149 +36,167 @@ class EvolutionAPI:
             json=payload
         )
         try:
-            res_json = response.json()
+            return response.json()
         except:
-            res_json = {"error": "Invalid JSON response", "raw": response.text}
-        print("📩 API Response:", res_json)
-        return res_json
+            return {"error": "Invalid JSON", "raw": response.text}
 
 
-# ---------- Streamlit Page Config ----------
+
+# ------------------ STREAMLIT PAGE CONFIG ------------------
 st.set_page_config(page_title="💬 Communication Hub", page_icon="💎", layout="centered")
 
-# ---------- FULL GLASS MODE + PREMIUM BACKGROUND ----------
+# ------------------ ADVANCED PREMIUM UI ------------------
 st.markdown("""
 <style>
 
-    /* ----- Background Image + Soft Gradient ----- */
+    /* -------- BACKGROUND -------- */
     html, body {
         background: 
-            linear-gradient(135deg, rgba(238,242,255,0.80), rgba(219,228,255,0.80)),
-            url('https://images.unsplash.com/photo-1503264116251-35a269479413?auto=format&fit=crop&w=1920&q=80');
-
+            linear-gradient(135deg, rgba(140,180,255,0.45), rgba(180,140,255,0.45)),
+            url('https://images.unsplash.com/photo-1522199710521-72d69614c702?auto=format&fit=crop&w=1920&q=80');
         background-size: cover !important;
         background-position: center !important;
         background-attachment: fixed !important;
         font-family: 'Poppins', sans-serif;
+        animation: fadeBg 18s ease-in-out infinite alternate;
     }
 
-    /* ----- Main Container ----- */
-    section.main > div { 
-        background: rgba(255,255,255,0.25) !important;
-        backdrop-filter: blur(20px) !important;
-        border-radius: 25px !important;
+    @keyframes fadeBg {
+        0% { filter: brightness(0.95) saturate(1.1); }
+        100% { filter: brightness(1.1) saturate(1.3); }
+    }
+
+    /* -------- MAIN CENTERED CARD -------- */
+    section.main > div {
+        background: rgba(255,255,255,0.20) !important;
+        backdrop-filter: blur(22px) !important;
+        border-radius: 28px !important;
         padding: 3rem !important;
         border: 1px solid rgba(255,255,255,0.45) !important;
-        box-shadow: 0 20px 60px rgba(0,0,0,0.15) !important;
-        animation: fadeIn 0.9s ease !important;
+        box-shadow: 0 20px 70px rgba(0,0,0,0.20) !important;
+        animation: slideDown 0.8s ease !important;
     }
 
-    /* Animation */
-    @keyframes fadeIn {
-        from { opacity: 0; transform: translateY(15px); }
-        to   { opacity: 1; transform: translateY(0); }
+    @keyframes slideDown {
+        from { opacity:0; transform: translateY(-20px); }
+        to   { opacity:1; transform: translateY(0); }
     }
 
-    /* ----- Text Styling ----- */
+    /* -------- HEADERS -------- */
     h1 {
         text-align: center !important;
-        font-weight: 800 !important;
-        color: #1e3a8a !important;
-        letter-spacing: -1px !important;
-    }
-    h3 {
-        text-align:center !important;
-        color:#475569 !important;
-        font-weight: 400 !important;
+        font-weight: 900 !important;
+        font-size: 2.8rem !important;
+        background: linear-gradient(90deg, #3b82f6, #a855f7);
+        -webkit-background-clip: text;
+        color: transparent;
+        animation: glow 2.5s ease-in-out infinite alternate;
     }
 
-    /* ----- Buttons ----- */
+    @keyframes glow {
+        0% { text-shadow: 0 0 18px rgba(59,130,246,0.4); }
+        100% { text-shadow: 0 0 28px rgba(168,85,247,0.5); }
+    }
+
+    h3 {
+        text-align:center !important;
+        color:#334155 !important;
+        font-weight: 500 !important;
+        opacity: .85 !important;
+    }
+
+    /* -------- BUTTONS -------- */
     .stButton > button {
-        background: linear-gradient(90deg, #2563eb, #3b82f6) !important;
+        background: linear-gradient(90deg, #2563eb, #a855f7) !important;
         color: white !important;
-        border-radius: 14px !important;
-        padding: .9rem 2rem !important;
-        font-size: 1.1rem !important;
+        border-radius: 16px !important;
+        padding: 1rem 2rem !important;
         font-weight: 600 !important;
+        font-size: 1.1rem !important;
         border: none !important;
         width: 100% !important;
-        box-shadow: 0 10px 25px rgba(37,99,235,.35) !important;
-        transition: .3s ease !important;
+        box-shadow: 0 12px 35px rgba(59,130,246,.45) !important;
+        transition: 0.3s ease !important;
+        animation: pulseBtn 2.5s infinite ease-in-out alternate;
+    }
+
+    @keyframes pulseBtn {
+        0% { transform: scale(1); box-shadow: 0 10px 25px rgba(59,130,246,0.34); }
+        100% { transform: scale(1.03); box-shadow: 0 15px 45px rgba(168,85,247,0.45); }
     }
 
     .stButton > button:hover {
-        background: linear-gradient(90deg,#1e40af,#2563eb) !important;
-        transform: translateY(-3px) !important;
-        box-shadow: 0 14px 30px rgba(37,99,235,.45) !important;
+        transform: translateY(-4px) scale(1.03) !important;
+        box-shadow: 0 18px 55px rgba(59,130,246,.55) !important;
     }
 
-    /* ----- Inputs ----- */
-    .stTextInput>div>div>input, textarea {
-        border-radius: 12px !important;
-        border: 1px solid #cbd5e1 !important;
-        background-color: #f8fafc !important;
-        padding: .7rem !important;
+    /* -------- INPUTS -------- */
+    .stTextInput input, textarea {
+        border-radius: 14px !important;
+        background: rgba(255,255,255,0.65) !important;
+        border: 1px solid rgba(255,255,255,0.35) !important;
+        padding: .8rem !important;
+        transition: .25s;
+    }
+    .stTextInput input:focus {
+        border-color: #7c3aed !important;
+        box-shadow: 0 0 12px rgba(124,58,237,0.5) !important;
     }
 
     .stSelectbox div[data-baseweb="select"] > div {
-        border-radius: 12px !important;
-        background-color: #f1f5f9 !important;
-        border: 1px solid #cbd5e1 !important;
+        border-radius: 14px !important;
+        background: rgba(255,255,255,0.65) !important;
+        border: 1px solid rgba(255,255,255,0.35) !important;
     }
 
 </style>
 """, unsafe_allow_html=True)
 
 
-# ---------- Title ----------
+# ------------------ PAGE CONTENT ------------------
 st.title("💬 Communication Hub")
-st.write("### Send your messages professionally via Email or WhatsApp 🚀")
+st.write("### Send your messages in a professional & beautiful interface 🚀")
 
 
-# ---------- Load CSV Files ----------
+# ------------------ LOAD CSV ------------------
 try:
     receivers_df = pd.read_csv(io.StringIO(st.secrets["MAILS_CSV"]))
     senders_df = pd.read_csv(io.StringIO(st.secrets["SENDERS_CSV"]))
-    st.success(f"✔ Loaded: {len(receivers_df)} receivers | {len(senders_df)} senders")
+    st.success(f"Loaded {len(receivers_df)} receivers & {len(senders_df)} senders ✔")
 except Exception as e:
-    st.error(f"Error loading CSV: {e}")
+    st.error(f"CSV Error: {e}")
     st.stop()
 
 
-# ---------- User Inputs ----------
-method = st.selectbox("Send Method", ["Email", "WhatsApp"])
-delay = 2
+# ------------------ USER INPUTS ------------------
+method = st.selectbox("Choose Sending Method", ["Email", "WhatsApp"])
 
 if method == "Email":
     subject = st.text_input("Email Subject", "Test Email")
     body_template = st.text_area("Email Body", "Hello {name},\nThis is a test email.")
 else:
-    body_template = st.text_area("WhatsApp Message", "Hi {name}, this is a WhatsApp test message!")
+    body_template = st.text_area("WhatsApp Message", "Hi {name}, this is a test WhatsApp message!")
 
-# ---------- Department Filter ----------
+
+# ------------------ FILTER BY DEPARTMENT ------------------
 if "dept" in receivers_df.columns:
-    departments = sorted(receivers_df["dept"].dropna().unique().tolist())
-    selected = st.multiselect("Choose Department(s)", options=departments, default=departments)
+    depts = sorted(receivers_df["dept"].dropna().unique().tolist())
+    selected = st.multiselect("Choose Departments", options=depts, default=depts)
     filtered_df = receivers_df if not selected else receivers_df[receivers_df["dept"].isin(selected)]
 else:
     filtered_df = receivers_df
 
-# ---------- WhatsApp Check ----------
-if method == "WhatsApp" and "number" not in filtered_df.columns:
-    st.error("❌ Missing 'number' column!")
-    st.stop()
 
-
-# ---------- SEND BUTTON ----------
+# ------------------ SEND LOGIC ------------------
 st.subheader("🚀 Ready to Send")
 
 if st.button(f"Send {method} Messages"):
-    st.success("Sending started... ⚡")
+    st.success("Sending messages... ⚡")
 
     total = len(filtered_df)
     sent_count = 0
-    senders_cycle = cycle(senders_df.to_dict(orient="records"))
     api = EvolutionAPI()
+    sender_cycle = cycle(senders_df.to_dict(orient="records"))
 
     for _, row in filtered_df.iterrows():
 
@@ -189,19 +205,18 @@ if st.button(f"Send {method} Messages"):
 
         try:
             if method == "Email":
-                sender = next(senders_cycle)
+                sender = next(sender_cycle)
                 sender_email = sender["email"]
-                pw = sender["app_password"]
-                receiver = row["email"]
+                app_pw = sender["app_password"]
 
                 msg = MIMEText(message)
                 msg["Subject"] = subject
                 msg["From"] = sender_email
-                msg["To"] = receiver
+                msg["To"] = row["email"]
 
                 s = smtplib.SMTP("smtp.gmail.com", 587)
                 s.starttls()
-                s.login(sender_email, pw)
+                s.login(sender_email, app_pw)
                 s.send_message(msg)
                 s.quit()
 
@@ -211,8 +226,10 @@ if st.button(f"Send {method} Messages"):
             sent_count += 1
 
         except Exception as e:
-            st.error(f"❌ Error sending to {name}: {e}")
+            st.error(f"Failed for {name}: {e}")
 
-        time.sleep(delay)
+        time.sleep(1.8)
 
-    st.success(f"🎉 Done! Successfully sent {sent_count}/{total} messages.")
+    st.success(f"🎉 Successfully sent {sent_count}/{total} messages!")
+
+
