@@ -39,7 +39,7 @@ class EvolutionAPI:
         )
         try:
             res_json = response.json()
-        except Exception:
+        except:
             res_json = {"error": "Invalid JSON response", "raw": response.text}
         print("📩 API Response:", res_json)
         return res_json
@@ -48,34 +48,40 @@ class EvolutionAPI:
 # ---------- Streamlit Page Config ----------
 st.set_page_config(page_title="💬 Communication Hub", page_icon="💎", layout="centered")
 
-# ---------- FIXED + WORKING GLASS PREMIUM CSS ----------
+# ---------- FULL GLASS MODE + PREMIUM BACKGROUND ----------
 st.markdown("""
 <style>
 
-    /* ----- Global Background ----- */
+    /* ----- Background Image + Soft Gradient ----- */
     html, body {
-        background: linear-gradient(135deg, #eef2ff 0%, #dbe4ff 50%, #e0e7ff 100%) !important;
+        background: 
+            linear-gradient(135deg, rgba(238,242,255,0.80), rgba(219,228,255,0.80)),
+            url('https://images.unsplash.com/photo-1503264116251-35a269479413?auto=format&fit=crop&w=1920&q=80');
+
+        background-size: cover !important;
+        background-position: center !important;
+        background-attachment: fixed !important;
         font-family: 'Poppins', sans-serif;
     }
 
-    /* ----- Main Streamlit Container ----- */
+    /* ----- Main Container ----- */
     section.main > div { 
         background: rgba(255,255,255,0.25) !important;
         backdrop-filter: blur(20px) !important;
         border-radius: 25px !important;
         padding: 3rem !important;
         border: 1px solid rgba(255,255,255,0.45) !important;
-        box-shadow: 0 20px 60px rgba(0,0,0,0.08) !important;
+        box-shadow: 0 20px 60px rgba(0,0,0,0.15) !important;
         animation: fadeIn 0.9s ease !important;
     }
 
-    /* Fade In */
+    /* Animation */
     @keyframes fadeIn {
         from { opacity: 0; transform: translateY(15px); }
         to   { opacity: 1; transform: translateY(0); }
     }
 
-    /* Titles */
+    /* ----- Text Styling ----- */
     h1 {
         text-align: center !important;
         font-weight: 800 !important;
@@ -88,7 +94,7 @@ st.markdown("""
         font-weight: 400 !important;
     }
 
-    /* Buttons */
+    /* ----- Buttons ----- */
     .stButton > button {
         background: linear-gradient(90deg, #2563eb, #3b82f6) !important;
         color: white !important;
@@ -108,7 +114,7 @@ st.markdown("""
         box-shadow: 0 14px 30px rgba(37,99,235,.45) !important;
     }
 
-    /* Inputs */
+    /* ----- Inputs ----- */
     .stTextInput>div>div>input, textarea {
         border-radius: 12px !important;
         border: 1px solid #cbd5e1 !important;
@@ -140,7 +146,8 @@ except Exception as e:
     st.error(f"Error loading CSV: {e}")
     st.stop()
 
-# ---------- User Selections ----------
+
+# ---------- User Inputs ----------
 method = st.selectbox("Send Method", ["Email", "WhatsApp"])
 delay = 2
 
@@ -148,7 +155,6 @@ if method == "Email":
     subject = st.text_input("Email Subject", "Test Email")
     body_template = st.text_area("Email Body", "Hello {name},\nThis is a test email.")
 else:
-    subject = None
     body_template = st.text_area("WhatsApp Message", "Hi {name}, this is a WhatsApp test message!")
 
 # ---------- Department Filter ----------
@@ -157,7 +163,6 @@ if "dept" in receivers_df.columns:
     selected = st.multiselect("Choose Department(s)", options=departments, default=departments)
     filtered_df = receivers_df if not selected else receivers_df[receivers_df["dept"].isin(selected)]
 else:
-    st.error("❌ 'dept' column missing!")
     filtered_df = receivers_df
 
 # ---------- WhatsApp Check ----------
@@ -165,7 +170,8 @@ if method == "WhatsApp" and "number" not in filtered_df.columns:
     st.error("❌ Missing 'number' column!")
     st.stop()
 
-# ---------- Send Section ----------
+
+# ---------- SEND BUTTON ----------
 st.subheader("🚀 Ready to Send")
 
 if st.button(f"Send {method} Messages"):
@@ -177,6 +183,7 @@ if st.button(f"Send {method} Messages"):
     api = EvolutionAPI()
 
     for _, row in filtered_df.iterrows():
+
         name = row["name"]
         message = body_template.format(name=name)
 
@@ -184,7 +191,7 @@ if st.button(f"Send {method} Messages"):
             if method == "Email":
                 sender = next(senders_cycle)
                 sender_email = sender["email"]
-                password = sender["app_password"]
+                pw = sender["app_password"]
                 receiver = row["email"]
 
                 msg = MIMEText(message)
@@ -192,11 +199,11 @@ if st.button(f"Send {method} Messages"):
                 msg["From"] = sender_email
                 msg["To"] = receiver
 
-                server = smtplib.SMTP("smtp.gmail.com", 587)
-                server.starttls()
-                server.login(sender_email, password)
-                server.send_message(msg)
-                server.quit()
+                s = smtplib.SMTP("smtp.gmail.com", 587)
+                s.starttls()
+                s.login(sender_email, pw)
+                s.send_message(msg)
+                s.quit()
 
             else:
                 api.send_message(str(row["number"]), message)
