@@ -48,84 +48,87 @@ class EvolutionAPI:
 # ---------- Streamlit Page Config ----------
 st.set_page_config(page_title="💬 Communication Hub", page_icon="💎", layout="centered")
 
-# ---------- GLASS ULTRA-PREMIUM PROFESSIONAL CSS ----------
+# ---------- FIXED + WORKING GLASS PREMIUM CSS ----------
 st.markdown("""
 <style>
-    body {
-        background: linear-gradient(135deg, #eef2ff 0%, #dbe4ff 50%, #e0e7ff 100%);
+
+    /* ----- Global Background ----- */
+    html, body {
+        background: linear-gradient(135deg, #eef2ff 0%, #dbe4ff 50%, #e0e7ff 100%) !important;
         font-family: 'Poppins', sans-serif;
     }
-    .block-container {
-        max-width: 900px !important;
-        margin: auto;
-        padding-top: 2rem !important;
+
+    /* ----- Main Streamlit Container ----- */
+    section.main > div { 
+        background: rgba(255,255,255,0.25) !important;
+        backdrop-filter: blur(20px) !important;
+        border-radius: 25px !important;
+        padding: 3rem !important;
+        border: 1px solid rgba(255,255,255,0.45) !important;
+        box-shadow: 0 20px 60px rgba(0,0,0,0.08) !important;
+        animation: fadeIn 0.9s ease !important;
     }
-    .main-card {
-        background: rgba(255,255,255,0.25);
-        padding: 3rem;
-        border-radius: 25px;
-        backdrop-filter: blur(20px);
-        border: 1px solid rgba(255,255,255,0.45);
-        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.08);
-        animation: fadeIn .9s ease;
-    }
+
+    /* Fade In */
     @keyframes fadeIn {
         from { opacity: 0; transform: translateY(15px); }
         to   { opacity: 1; transform: translateY(0); }
     }
+
+    /* Titles */
     h1 {
-        text-align: center;
-        font-weight: 800;
-        color: #1e3a8a;
-        letter-spacing: -1px;
+        text-align: center !important;
+        font-weight: 800 !important;
+        color: #1e3a8a !important;
+        letter-spacing: -1px !important;
     }
     h3 {
-        text-align:center;
-        color:#475569;
-        font-weight: 400;
+        text-align:center !important;
+        color:#475569 !important;
+        font-weight: 400 !important;
     }
+
+    /* Buttons */
     .stButton > button {
-        background: linear-gradient(90deg, #2563eb, #3b82f6);
+        background: linear-gradient(90deg, #2563eb, #3b82f6) !important;
         color: white !important;
-        border-radius: 14px;
-        padding: .9rem 2rem;
-        font-size: 1.1rem;
-        font-weight: 600;
-        border: none;
-        box-shadow: 0 8px 22px rgba(37, 99, 235, 0.35);
-        transition: .3s ease;
-        width: 100%;
+        border-radius: 14px !important;
+        padding: .9rem 2rem !important;
+        font-size: 1.1rem !important;
+        font-weight: 600 !important;
+        border: none !important;
+        width: 100% !important;
+        box-shadow: 0 10px 25px rgba(37,99,235,.35) !important;
+        transition: .3s ease !important;
     }
+
     .stButton > button:hover {
-        background: linear-gradient(90deg, #1e40af, #2563eb);
-        transform: translateY(-3px);
-        box-shadow: 0 12px 28px rgba(37, 99, 235, 0.45);
+        background: linear-gradient(90deg,#1e40af,#2563eb) !important;
+        transform: translateY(-3px) !important;
+        box-shadow: 0 14px 30px rgba(37,99,235,.45) !important;
     }
+
+    /* Inputs */
     .stTextInput>div>div>input, textarea {
         border-radius: 12px !important;
         border: 1px solid #cbd5e1 !important;
         background-color: #f8fafc !important;
         padding: .7rem !important;
     }
+
     .stSelectbox div[data-baseweb="select"] > div {
         border-radius: 12px !important;
         background-color: #f1f5f9 !important;
         border: 1px solid #cbd5e1 !important;
     }
-    hr {
-        border: none;
-        height: 1px;
-        background: linear-gradient(to right, transparent, #94a3b8, transparent);
-        margin: 2rem 0;
-    }
+
 </style>
 """, unsafe_allow_html=True)
 
-# ---------- Layout ----------
-st.markdown('<div class="main-card">', unsafe_allow_html=True)
-st.markdown("<h1>💬 Communication Hub</h1>", unsafe_allow_html=True)
-st.markdown("<h3>Send your messages professionally via Email or WhatsApp 🚀</h3>", unsafe_allow_html=True)
-st.markdown("<hr>", unsafe_allow_html=True)
+
+# ---------- Title ----------
+st.title("💬 Communication Hub")
+st.write("### Send your messages professionally via Email or WhatsApp 🚀")
 
 
 # ---------- Load CSV Files ----------
@@ -163,7 +166,6 @@ if method == "WhatsApp" and "number" not in filtered_df.columns:
     st.stop()
 
 # ---------- Send Section ----------
-st.markdown("<hr>", unsafe_allow_html=True)
 st.subheader("🚀 Ready to Send")
 
 if st.button(f"Send {method} Messages"):
@@ -207,5 +209,3 @@ if st.button(f"Send {method} Messages"):
         time.sleep(delay)
 
     st.success(f"🎉 Done! Successfully sent {sent_count}/{total} messages.")
-
-st.markdown("</div>", unsafe_allow_html=True)
